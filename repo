@@ -212,6 +212,9 @@ group.add_option('--no-clone-bundle',
 group.add_option('--no-tags',
                  dest='no_tags', action='store_true',
                  help="don't fetch tags in the manifest")
+group.add_option('--share-objects',
+                 dest='share_objects', action='store_true',
+                 help='share project-objects in the ~/.project-objects for current user')
 
 
 # Tool
@@ -338,6 +341,15 @@ def _Init(args, gitc_init=False):
         return
 
     os.mkdir(repodir)
+    if opt.share_objects:
+      share_project_objects_dir = os.path.expanduser("~/.project-objects")
+      if not os.path.exists(share_project_objects_dir):
+        _print('make dir: %s'%(share_project_objects_dir))
+        os.makedirs(share_project_objects_dir)
+      project_objects_dir = os.path.join(repodir,"project-objects")
+      if not os.path.exists(project_objects_dir) and os.path.isdir(share_project_objects_dir):
+        _print('make symbol link %s to %s'%(project_objects_dir,share_project_objects_dir))
+        os.symlink(share_project_objects_dir,project_objects_dir)
   except OSError as e:
     if e.errno != errno.EEXIST:
       _print('fatal: cannot make %s directory: %s'

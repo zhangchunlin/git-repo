@@ -130,6 +130,9 @@ to update the working directory files.
     g.add_option('--no-tags',
                  dest='no_tags', action='store_true',
                  help="don't fetch tags in the manifest")
+    g.add_option('--share-objects',
+                 dest='share_objects', action='store_true',
+                 help='share project-objects in the ~/.project-objects for current user')
 
     # Tool
     g = p.add_option_group('repo Version options')
